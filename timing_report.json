@@ -1,0 +1,90 @@
+[
+ {
+  "line": 0,
+  "tts_s": 2.45,
+  "slot_s": 2.31,
+  "tempo": 1.06,
+  "overrun_s": 0.01,
+  "note": ""
+ },
+ {
+  "line": 1,
+  "tts_s": 2.59,
+  "slot_s": 3.19,
+  "tempo": 1.0,
+  "overrun_s": 0,
+  "note": ""
+ },
+ {
+  "line": 2,
+  "tts_s": 1.93,
+  "slot_s": 3.19,
+  "tempo": 1.0,
+  "overrun_s": 0,
+  "note": ""
+ },
+ {
+  "line": 3,
+  "tts_s": 2.71,
+  "slot_s": 3.05,
+  "tempo": 1.0,
+  "overrun_s": 0,
+  "note": ""
+ },
+ {
+  "line": 4,
+  "tts_s": 2.89,
+  "slot_s": 3.97,
+  "tempo": 1.0,
+  "overrun_s": 0,
+  "note": ""
+ },
+ {
+  "line": 5,
+  "tts_s": 4.83,
+  "slot_s": 4.71,
+  "tempo": 1.03,
+  "overrun_s": 0.01,
+  "note": ""
+ },
+ {
+  "line": 6,
+  "tts_s": 3.53,
+  "slot_s": 3.99,
+  "tempo": 1.0,
+  "overrun_s": 0,
+  "note": ""
+ },
+ {
+  "line": 7,
+  "tts_s": 2.87,
+  "slot_s": 3.43,
+  "tempo": 1.0,
+  "overrun_s": 0,
+  "note": "ASR heard 'bloody'; likely 'muddy' or similar \u2014 flagged for review"
+ },
+ {
+  "line": 8,
+  "tts_s": 2.23,
+  "slot_s": 3.39,
+  "tempo": 1.0,
+  "overrun_s": 0,
+  "note": ""
+ },
+ {
+  "line": 9,
+  "tts_s": 4.49,
+  "slot_s": 6.19,
+  "tempo": 1.0,
+  "overrun_s": 0,
+  "note": ""
+ },
+ {
+  "line": 10,
+  "tts_s": 2.96,
+  "slot_s": 4.55,
+  "tempo": 1.0,
+  "overrun_s": 0,
+  "note": ""
+ }
+]
