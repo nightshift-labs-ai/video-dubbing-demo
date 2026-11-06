@@ -31,7 +31,7 @@ dub)
   python3 -c "
 import json,sys; S=json.load(open('script_$L.json')); bad=[i for i,s in enumerate(S) if not s.get('$L','').strip()]
 sys.exit('untranslated lines: '+str(bad)) if bad else print(len(S),'lines ok')"
-  python3 "$H/dub.py" src.mp4 "script_$L.json" sep/htdemucs/src/no_vocals.wav "out/dubbed_$L.mp4" "$L" > /dev/null
+  python3 "$H/dub.py" src.mp4 "script_$L.json" sep/htdemucs/src/no_vocals.wav "out/dubbed_$L.mp4" "$L"; mv "out/dubbed_$L.$L.srt" "out/dubbed_$L.srt" > /dev/null
   python3 -c "
 import json; R=json.load(open('out/dubbed_$L.report.json'))
 print('lines',len(R),'stretched',sum(r['tempo']>1 for r in R),'max overrun s',max(r['overrun_s'] for r in R))
