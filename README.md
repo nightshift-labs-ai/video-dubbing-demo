@@ -10,6 +10,7 @@ This is a 40-second test of the dubbing pipeline that Nightshift Labs (a small b
 | `translated_script.json` | Each line: start/end, speaker, English source, Spanish translation, notes. |
 | `timing_report.json` | Per line: TTS length, slot length, time-stretch used, overrun. |
 | `dub.py` | Fitting and mixing step. |
+| `diarize.py` | Automatic speaker labels for the transcript segments. |
 
 ## Pipeline
 1. **ASR:** faster-whisper produces line timestamps.
@@ -19,10 +20,10 @@ This is a 40-second test of the dubbing pipeline that Nightshift Labs (a small b
 5. **Fit:** each line starts exactly at the original line's start (0 ms offset). If it is longer than its slot, it is time-stretched up to 1.35×. If it is still too long, the translation is rewritten shorter before any further stretching. In this test only 1 of 11 lines needed stretching (1.12×), and it ran 20 ms over its slot.
 6. **Mix:** dubbed lines go over the background stem, then are muxed back onto the original video. Subtitles are written from the same timing.
 
-Limitations of this demo: speaker labels were set by hand (production would use diarization), and there is no lip-sync.
+Speaker labels: `diarize.py` (Resemblyzer voice embeddings + agglomerative clustering, with short lines merged into the nearest speaker) reproduces the two-speaker labelling of this clip exactly (18 of 18 segments). No lip-sync.
 
 ## Credits / licences
 - Source video: "Interview on extreme weather with physical geographer Hannah Cloke – The Royal Society", The Royal Society, **CC BY 3.0**, via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Interview_on_extreme_weather_with_physical_geographer_Hannah_Cloke_%E2%80%93_The_Royal_Society.webm). Changes: cut to 40 s, music bed added, speech replaced by a Spanish dub. These changes are not endorsed by the Royal Society or the speaker.
 - Music bed: "Adding the Sun", FreePD, CC0.
 - Voices: Piper es_ES `sharvard` and `davefx` ([rhasspy/piper-voices](https://huggingface.co/rhasspy/piper-voices)).
-- Code (`dub.py`): MIT.
+- Code (`dub.py`, `diarize.py`): MIT.
