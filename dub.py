@@ -5,8 +5,9 @@ F="/home/agent/tools/ffmpeg/ffmpeg"; PY="/home/agent/tools/piper-venv/bin/python
 src, script, bg, out = sys.argv[1:5]; LANG=(sys.argv[5] if len(sys.argv)>5 else "es")
 # voices per language: speaker label -> (model, speaker id). Extend when a job needs more speakers.
 VOICES={"es":{"A":("es_ES-sharvard-medium.onnx",1),"B":("es_ES-davefx-medium.onnx",0),"C":("es_ES-sharvard-medium.onnx",0)},
-        "de":{"A":("de_DE-thorsten-medium.onnx",0)}, "fr":{"A":("fr_FR-siwis-medium.onnx",0)},
-        "it":{"A":("it_IT-riccardo-x_low.onnx",0)}, "pt":{"A":("pt_BR-faber-medium.onnx",0)}}
+        "de":{"A":("de_DE-thorsten-medium.onnx",0),"B":("de_DE-kerstin-low.onnx",0)},
+        "fr":{"A":("fr_FR-siwis-medium.onnx",0),"B":("fr_FR-upmc-medium.onnx",1),"C":("fr_FR-upmc-medium.onnx",0)},
+        "it":{"A":("it_IT-paola-medium.onnx",0),"B":("it_IT-riccardo-x_low.onnx",0)}, "pt":{"A":("pt_BR-faber-medium.onnx",0),"B":("pt_BR-cadu-medium.onnx",0)}}
 L=json.load(open(script)); voices=VOICES[LANG]
 os.makedirs("tts",exist_ok=True); parts=[]; report=[]
 def dur(p):
