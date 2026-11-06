@@ -23,6 +23,15 @@ for c in set(lab.tolist()):
         if seg["end"] - seg["start"] < 1.5:
             cents = {d: X[lab == d].mean(0) for d in set(lab.tolist()) if d != c}
             lab[m[0]] = max(cents, key=lambda d: float(np.dot(X[m[0]], cents[d]) / np.linalg.norm(cents[d])))
+# clusters made only of short lines (median < 1.5 s) are usually fragments of a real speaker → merge into the nearest big cluster
+for c in sorted(set(lab.tolist()), key=lambda d: int((lab == d).sum())):   # smallest first; never merge below 2 speakers
+    m = np.where(lab == c)[0]; others = [d for d in set(lab.tolist()) if d != c]
+    if len(others) < 2 and len(set(lab.tolist())) <= 2: break
+    if not others: break
+    durs = [S[idx[k]]["end"] - S[idx[k]]["start"] for k in m]
+    if np.median(durs) < 1.5:
+        cent = X[m].mean(0); cents = {d: X[lab == d].mean(0) for d in others}
+        lab[m] = max(cents, key=lambda d: float(np.dot(cent, cents[d]) / (np.linalg.norm(cents[d]) * np.linalg.norm(cent))))
 lab = lab.tolist()
 # relabel by first appearance → A, B, C
 order = {}; it = iter(lab); L = []
