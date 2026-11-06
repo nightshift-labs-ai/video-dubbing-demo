@@ -2,14 +2,19 @@
 # mix over background stem (demucs no_vocals if present, else nothing), burn nothing; write SRT matching the dubbed lines.
 import json, subprocess, sys, wave, os
 F="/home/agent/tools/ffmpeg/ffmpeg"; PY="/home/agent/tools/piper-venv/bin/python"; V="/home/agent/tools/piper-voices/"
-src, script, bg, out = sys.argv[1:5]
-L=json.load(open(script)); voices={"A":("es_ES-sharvard-medium.onnx",1),"B":("es_ES-davefx-medium.onnx",0)}
+src, script, bg, out = sys.argv[1:5]; LANG=(sys.argv[5] if len(sys.argv)>5 else "es")
+# voices per language: speaker label -> (model, speaker id). Extend when a job needs more speakers.
+VOICES={"es":{"A":("es_ES-sharvard-medium.onnx",1),"B":("es_ES-davefx-medium.onnx",0),"C":("es_ES-sharvard-medium.onnx",0)},
+        "de":{"A":("de_DE-thorsten-medium.onnx",0)}, "fr":{"A":("fr_FR-siwis-medium.onnx",0)},
+        "it":{"A":("it_IT-riccardo-x_low.onnx",0)}, "pt":{"A":("pt_BR-faber-medium.onnx",0)}}
+L=json.load(open(script)); voices=VOICES[LANG]
 os.makedirs("tts",exist_ok=True); parts=[]; report=[]
 def dur(p):
     with wave.open(p) as w: return w.getnframes()/w.getframerate()
 for i,l in enumerate(L):
-    model,spk=voices[l["spk"]]; raw=f"tts/{i}.wav"
-    subprocess.run([PY,"-m","piper","-m",V+model,"-s",str(spk),"-f",raw],input=l["es"].encode(),check=True,capture_output=True)
+    # TODO: for >1 speaker in de/fr/it/pt download a 2nd voice (distinct voices required)
+    model,spk=voices.get(l["spk"], voices["A"]); raw=f"tts/{i}.wav"
+    subprocess.run([PY,"-m","piper","-m",V+model,"-s",str(spk),"-f",raw],input=l[LANG].encode(),check=True,capture_output=True)
     slot=(L[i+1]["start"] if i+1<len(L) else l["end"]+1.0)-l["start"]-0.05; d=dur(raw); tempo=max(1.0,d/slot)
     fit=f"tts/{i}_fit.wav"
     subprocess.run([F,"-v","error","-y","-i",raw,"-af",f"atempo={min(tempo,1.35):.3f}","-ar","24000","-ac","1",fit],check=True)
@@ -24,6 +29,6 @@ if bg!="-": cmd+=["-i",bg]; filt.append(f"[{n+1}:a]volume=1.0[bg]"); mix+="[bg]"
 filt.append(f"{mix}amix=inputs={n}:normalize=0:duration=longest[a]")
 subprocess.run(cmd+["-filter_complex",";".join(filt),"-map","0:v","-map","[a]","-c:v","copy","-c:a","aac","-shortest",out],check=True)
 def ts(x): h=int(x//3600); m=int(x%3600//60); s=x%60; return f"{h:02}:{m:02}:{s:06.3f}".replace(".",",")
-with open(out.rsplit(".",1)[0]+".es.srt","w") as f:
-    for i,l in enumerate(L): f.write(f"{i+1}\n{ts(l['dub_start'])} --> {ts(l['dub_end'])}\n{l['es']}\n\n")
+with open(out.rsplit(".",1)[0]+f".{LANG}.srt","w") as f:
+    for i,l in enumerate(L): f.write(f"{i+1}\n{ts(l['dub_start'])} --> {ts(l['dub_end'])}\n{l[LANG]}\n\n")
 json.dump(report,open(out.rsplit(".",1)[0]+".report.json","w"),indent=1); print(json.dumps(report))
